@@ -1,0 +1,5 @@
+name: "Clojars"
+description: "Release tools.deps project to clojars"
+runs:
+  using: "docker"
+  image: "Dockerfile"
