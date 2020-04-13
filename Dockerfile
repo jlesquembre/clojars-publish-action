@@ -7,7 +7,9 @@ ENV _JAVA_OPTIONS -Duser.home=/builder
 RUN mkdir -p /tmp/maven \
     && cd /tmp/maven \
     && clojure -Sdeps '{:deps {seancorfield/depstar {:mvn/version "1.0.94"}}}' -Spom \
-    && mvn dependency:go-offline
+    && mvn versions:help deploy:help \
+    && mvn dependency:go-offline \
+    && rm -rf /tmp/maven
 
 COPY entrypoint.sh /entrypoint.sh
 COPY settings.xml /builder/.m2/settings.xml
