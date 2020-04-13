@@ -1,5 +1,8 @@
-name: "Clojars"
-description: "Release tools.deps project to clojars"
+name: "Publish to clojars"
+description: "Release clojure tools.deps projects to clojars"
 runs:
   using: "docker"
   image: "Dockerfile"
+branding:
+  icon: "package"
+  color: "purple"
