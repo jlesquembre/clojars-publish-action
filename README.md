@@ -18,17 +18,20 @@ A minimal `pom.xml` is expected in the project root, e.g.:
   <name>${PROJECT_NAME}</name>
   <description>A description</description>
   <url>https://github.com/$USER/$PROJECT</url>
+
   <licenses>
     <license>
       <name>Eclipse Public License</name>
       <url>http://www.eclipse.org/legal/epl-v10.html</url>
     </license>
   </licenses>
+
   <developers>
     <developer>
       <name>Your name</name>
     </developer>
   </developers>
+
   <scm>
     <url>https://github.com/$USER/$PROJECT</url>
     <connection>scm:git:git://github.com/$USER/$PROJECT.git</connection>
@@ -36,16 +39,15 @@ A minimal `pom.xml` is expected in the project root, e.g.:
     <tag>HEAD</tag>
   </scm>
 
-  <build>
-    <sourceDirectory>src</sourceDirectory>
-  </build>
-
 </project>
 ```
 
-Notice that `version` and `smc/tag` values don't matter, since they will be
-replaces with tag name. Also, your dependencies will be generated from your
-`deps.edn` file, you don't need to define them.
+Notice that your `pom.xml` is used as a template, you don't need to define your
+dependencies nor your source directory, since that data will be generated from
+your `deps.edn` (via `clojure -Spom`).
+
+Also, `version` and `smc/tag` values don't matter, since they will be replaced
+with the data from git (tag or branch name).
 
 ## Environment variables
 
