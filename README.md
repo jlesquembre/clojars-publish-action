@@ -57,7 +57,12 @@ with the data from git (tag or branch name).
 
 ### `CLOJARS_PASSWORD`
 
-**Required** Your clojars password. Use GitHub secrets, see
+**Required** Your clojars token. As of 2020-06-27, Clojars will no longer accept
+your Clojars password, you have to use a token instead. Read more about this
+here:
+[Clojars wiki: Deploy Tokens](https://github.com/clojars/clojars-web/wiki/Deploy-Tokens)
+
+To learn about about GitHub secrets, see
 [Creating and storing encrypted secrets on GitHub help](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets)
 
 ## Usage
