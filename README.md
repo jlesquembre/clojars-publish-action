@@ -90,3 +90,32 @@ jobs:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
 ```
+
+## Rationale
+
+Git should be the only source of truth for versioning. Git is widely adopted and
+Git objects are immutable. It doesn't make sense to keep the version number in a
+file if you already have that information in Git.
+
+Every time you create a new Git tag, this action will create a new release on
+clojars with the tag's name.
+
+For convenience, every time you push to a branch, a new SNAPSHOT version is
+created, based on the branch name. For example, if you push to `dev` branch, a
+new release `dev-SNAPSHOT` will be created. That approach makes more sense
+because:
+
+- It makes clearer what version you are getting from the SNAPSHOT. For example,
+  if you are working on branches `foo` and `bar` for the next release, what
+  version will you get from `1.0.1-SNAPSHOT`? `foo` or `bar`? You don't know, it
+  depends on the latest push.
+- You can't be sure about your next version number. Maybe you are thinking about
+  releasing 1.0.1, but in the end, some breaking changes are needed and you need
+  to release version 2.0.0.
+- It is useless to have that many SNAPSHOT versions. Many projects have
+  `1.0.1-SNAPSHOT`, `1.0.2-SNAPSHOT`, `1.0.3-SNAPSHOT`, and so on. But after the
+  next release, who cares about previous snapshots? If `1.1.0` was released, who
+  cares about `1.0.X-SNAPSHOT`?
+
+Keep in mind that in Clojure projects, you can use Git coordinates for
+dependencies, prefer it to snapshots.
