@@ -85,7 +85,7 @@ jobs:
       # This step checks out a copy of your repository.
       - uses: actions/checkout@v2
 
-      - uses: jlesquembre/clojars-publish-action@master
+      - uses: jlesquembre/clojars-publish-action@0.2
         env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
