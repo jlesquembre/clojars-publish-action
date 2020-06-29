@@ -2,7 +2,7 @@ name: "Publish to clojars"
 description: "Release clojure tools.deps projects to clojars"
 runs:
   using: "docker"
-  image: "Dockerfile"
+  image: "docker://jlle/clojars"
 branding:
   icon: "package"
   color: "purple"
