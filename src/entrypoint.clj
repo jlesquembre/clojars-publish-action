@@ -13,9 +13,9 @@
 (xml/alias-uri 'pom "http://maven.apache.org/POM/4.0.0")
 
 (def github-ref (or (System/getenv "GITHUB_REF") "refs/UNKNOWN"))
-(def version (cond-> (last (str/split github-ref #"/"))
-               (not (str/starts-with? github-ref "refs/tags/"))
-               (str "-SNAPSHOT")))
+(def use-git-ref (case (some-> "USE_GIT_REF" System/getenv str/lower-case)
+                   "false" nil
+                   true))
 
 (defn nav-xml
   [xml path]
@@ -38,6 +38,14 @@
        (xml/emit-str))
       xml))
 
+(defn get-version
+  [xml]
+  (if use-git-ref
+    (cond-> (last (str/split github-ref #"/"))
+      (not (str/starts-with? github-ref "refs/tags/"))
+      (str "-SNAPSHOT"))
+    (get-content xml ::pom/project ::pom/version)))
+
 (defn file->str
   [& parts]
   (let [path (apply str parts)
@@ -45,23 +53,29 @@
     (when (.exists f)
       (slurp f))))
 
-(defn -main
-  [& args]
-  (let [cwd "."
-        deps (-> (file->str cwd "/deps.edn") edn/read-string)
-        xml (file->str cwd "/pom.xml")
-        project-name (get-content xml ::pom/project ::pom/name)
-        jar-name (str project-name "-" version ".jar")
-        jar-path (str cwd "/target/" jar-name)
-        new-pom (-> xml
+(defn update-pom-version!
+  [pom version]
+  (let [new-pom (-> pom
                     (update-content version ::pom/project ::pom/version)
                     (update-content version ::pom/project ::pom/scm ::pom/tag))]
+    (spit "./pom.xml" new-pom)))
 
-    (spit (str cwd "/pom.xml") new-pom)
+
+(defn -main
+  [& args]
+  (let [deps (-> (file->str "./deps.edn") edn/read-string)
+        pom (file->str "./pom.xml")
+        version (get-version pom)
+        project-name (get-content pom ::pom/project ::pom/name)
+        jar-name (str project-name "-" version ".jar")
+        jar-path (str "./target/" jar-name)]
+
+    (when use-git-ref
+      (update-pom-version! pom version))
 
     ; https://github.com/clojure/brew-install/blob/2ee355398e655e1d1b57e4f5ee658d087ccaea7f/src/main/resources/clojure#L342
     ; (print (:out (sh "clojure" "-Spom")))
-    (gen-manifest/-main "--config-project" (str cwd "/deps.edn") "--gen" "pom")
+    (gen-manifest/-main "--config-project" "./deps.edn" "--gen" "pom")
 
     (uber-main {:dest jar-path :jar :thin} ["-v"])
     ; (uber-main {:dest (str cwd "/target/" jar-name) :jar :uber} ["-v"])))

@@ -65,6 +65,13 @@ here:
 To learn about about GitHub secrets, see
 [Creating and storing encrypted secrets on GitHub help](https://help.github.com/en/actions/configuring-and-managing-workflows/creating-and-storing-encrypted-secrets)
 
+### `USE_GIT_REF`
+
+The release version is extracted from the git tag/branch. If you don't like this
+behavior and you prefer to manage the version number manually, set `USE_GIT_REF`
+to `false`. The version number will be taken unmodified from your `pom.xml`
+file.
+
 ## Usage
 
 `.github/workflows/release.yaml`:
@@ -85,7 +92,7 @@ jobs:
       # This step checks out a copy of your repository.
       - uses: actions/checkout@v2
 
-      - uses: jlesquembre/clojars-publish-action@0.2
+      - uses: jlesquembre/clojars-publish-action@0.3
         env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}

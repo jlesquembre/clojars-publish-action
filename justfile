@@ -1,5 +1,5 @@
 IMAGE_NAME := "jlle/clojars"
-VERSION := "dev-02"
+VERSION := "0.3"
 PWD := `pwd`
 
 build:
