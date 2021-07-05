@@ -7,7 +7,7 @@
     [clojure.string :as str]
     [clojure.java.io :as io]
     [clojure.edn :as edn]
-    [hf.depstar.uberjar :refer [uber-main]]
+    [hf.depstar.uberjar :refer [build-jar]]
     [deps-deploy.deps-deploy :as deploy]))
 
 (xml/alias-uri 'pom "http://maven.apache.org/POM/4.0.0")
@@ -77,11 +77,11 @@
     ; (print (:out (sh "clojure" "-Spom")))
     (gen-manifest/-main "--config-project" "./deps.edn" "--gen" "pom")
 
-    (uber-main {:dest jar-path :jar :thin} ["-v"])
-    ; (uber-main {:dest (str cwd "/target/" jar-name) :jar :uber} ["-v"])))
+    (build-jar {:jar jar-path :jar-type :thin :verbose true})
 
     ; mvn deploy:deploy-file -Dfile="target/${jar_name}" -DpomFile=pom.xml \
     ;   -DrepositoryId=clojars -Durl=https://clojars.org/repo/ \
     ;   -Dclojars.username="${CLOJARS_USERNAME}" \
     ;   -Dclojars.password="${CLOJARS_PASSWORD}"
+
     (deploy/-main "deploy" jar-path)))
